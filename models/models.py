@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 
 # cria a conexao do seu banco
-db = create_engine("sqlite:///./../database/app.db")
+db = create_engine("sqlite:///./database/app.db")
 
 # Pedido
 # ItensPedido
