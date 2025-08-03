@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-orders_router = APIRouter(prefix="/pedidos6.+", tags=["pedidos6.+"])
+orders_router = APIRouter(prefix="/pedidos6.+", tags=["pedidos"])
 
 @orders_router.get("")
 async def get_orders():
