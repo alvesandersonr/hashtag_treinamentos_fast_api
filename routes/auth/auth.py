@@ -70,7 +70,6 @@ async def login(dados_formulario: OAuth2PasswordRequestForm = Depends(), session
         raise HTTPException(status_code=401, detail="E-mail ou senha inválidos")
     
     access_token = criar_token(usuario.id)
-    refresh_token = criar_token(usuario.id, duracao_token=timedelta(days=7))
     
     return {
         "access_token": access_token,
