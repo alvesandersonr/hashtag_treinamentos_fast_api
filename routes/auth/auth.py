@@ -6,6 +6,7 @@ from schemas import UsuarioSchema, LoginSchema
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
+from fastapi.security import OAuth2PasswordRequestForm
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -55,6 +56,24 @@ async def login(login_schema: LoginSchema, session: Session = Depends(pegar_sess
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,
+        "token_type": "Bearer"
+        }
+
+@auth_router.post("/login-form")
+async def login(dados_formulario: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(pegar_sessao)):
+    """
+    Login apenas testar api
+    """
+    usuario = autenticar_usuario(dados_formulario.username, dados_formulario.password, session)
+    
+    if not usuario:
+        raise HTTPException(status_code=401, detail="E-mail ou senha inválidos")
+    
+    access_token = criar_token(usuario.id)
+    refresh_token = criar_token(usuario.id, duracao_token=timedelta(days=7))
+    
+    return {
+        "access_token": access_token,
         "token_type": "Bearer"
         }
 
