@@ -1,5 +1,6 @@
 from models.base import Base
 from sqlalchemy import Column, Integer, Float, ForeignKey, String
+from sqlalchemy.orm import relationship
 
 class Pedido(Base):
     __tablename__ = "pedidos"
@@ -15,9 +16,18 @@ class Pedido(Base):
     # status = Column("status", ChoiceType(STATUS_PEDIDO), nullable=False, default="PENDENTE")
     status = Column("status", String, nullable=False, default="PENDENTE")
     preco = Column("preco", Float, nullable=False)
-    #itens = Column("ativo", Boolean, default=True)
+    itens = relationship("PedidoItem", cascade="all, delete")
     
     def __init__(self, usuario_id, status="PENDENTE", preco=0):
         self.status = status
         self.usuario_id = usuario_id
         self.preco = preco
+        
+    def calcular_preco(self):
+        preco_pedido = 0
+        for item in self.itens:
+            preco_item = item.preco_unitario * item.quantidade
+            preco_pedido += preco_item
+        
+        
+        self.preco = preco_pedido
